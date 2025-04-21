@@ -1,0 +1,113 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id("com.github.ben-manes.versions") version "0.51.0"
+    id 'org.liquibase.gradle' version '2.2.0'
+}
+
+
+
+
+group = 'ly.neptune'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+    // Add Vaadin repository
+//    maven { url = 'https://maven.vaadin.com/vaadin-addons' }
+//    maven { url = 'https://maven.vaadin.com/vaadin-prereleases' }
+    maven { url = 'https://repo.spring.io/milestone' }
+    maven { url = 'https://repo.spring.io/release' }
+}
+
+springBoot {
+    buildInfo()
+}
+
+// Determine packaging type: default is 'jar'
+def packagingType = project.findProperty('packagingType') ?: 'jar'
+
+if (packagingType == 'war') {
+    // --- WAR mode: apply the war plugin and enable bootWar ---
+    apply plugin: 'war'
+
+    // Disable JAR tasks:
+    tasks.named('bootJar') {
+        enabled = false
+    }
+    tasks.named('jar') {
+        enabled = false
+    }
+    // Enable bootWar (executable WAR) and disable the plain war task:
+    tasks.named('bootWar') {
+        enabled = true
+    }
+    tasks.findByName('war')?.enabled = false
+
+    // Exclude embedded Tomcat and logging so that WildFly’s implementations are used:
+    configurations.all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    }
+    dependencies {
+        // Provide Tomcat so it's available at runtime but not packaged:
+        providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    }
+} else {
+    // --- JAR mode: disable WAR tasks and enable both bootJar and jar ---
+    if (project.tasks.findByName('bootWar')) {
+        tasks.named('bootWar') {
+            enabled = false
+        }
+    }
+    if (project.tasks.findByName('war')) {
+        tasks.named('war') {
+            enabled = false
+        }
+    }
+    tasks.named('bootJar') {
+        enabled = true   // Fat (executable) JAR with dependencies
+    }
+    tasks.named('jar') {
+        enabled = true   // Plain JAR (without dependencies)
+    }
+
+    // Attach the plain JAR to the archives configuration so it’s produced by the build:
+    artifacts {
+        archives tasks.jar
+    }
+}
+
+dependencies {
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+
+    // Oracle JDBC driver
+    implementation 'com.oracle.database.jdbc:ojdbc8:23.6.0.24.10'
+
+
+
+    // Lombok
+    implementation("org.projectlombok:lombok:1.18.36")
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
+    testImplementation("org.projectlombok:lombok:1.18.36")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+
+
+}
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+

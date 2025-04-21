@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: nexus-lite
+  datasource:
+    hikari:
+      jdbc-url:              <DATABASE-CONNECTION-STRING>
+      username:               <DB USER>
+      password:               <DB PASSWORD>
+      driver-class-name:      oracle.jdbc.OracleDriver
+      maximum-pool-size:      10
+      minimum-idle:           2
+      connection-timeout:     19000
+      idle-timeout:           450000
+      max-lifetime:           800000
+      data-source-properties:
+        defaultRowPrefetch:        100
+        implicitCachingEnabled:    true
+        fastConnectionFailoverEnabled: true
+        implicitStatementCacheSize:   50
+
+server:
+  port: 7003
+
+
+
+logging:
+  level:
+    root: info
