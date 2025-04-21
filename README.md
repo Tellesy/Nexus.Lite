@@ -147,6 +147,7 @@ For any questions or further information, please open an issue on GitHub or cont
 Special Thanks
 --------------
 
-A special thank you to Naser Alagory for Wahda bank for sharing the specifications for this project.
-
+A special thank you to:
+- **Naser Alagory** from Wahda Bank, for sharing the project specifications.
+- **Esra Endisha**, Product Owner of LYPay, for her support and assistance with Flexcube CBS.
 Happy coding!
