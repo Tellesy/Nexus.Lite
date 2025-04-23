@@ -16,16 +16,32 @@ public class TransactionLookupController {
 
     @PostMapping("/lookup")
     public ResponseEntity<TransactionLookupResponse> lookup(@RequestBody TransactionLookupRequest req) {
+//        var resp = service.lookup(
+//                req.getUserId(),
+//                req.getRrn(),
+//                req.getStan(),
+//                req.getTxnAmt(),
+//                req.getTermId(),
+//                req.getSetlDate(),
+//                req.getMessageType(),
+//                req.getReverse()
+//        );
+
+        // Extract data from the nested structure
+        TransactionLookupRequest.HeaderSwitchModel header = req.getHeaderSwitchModel();
+        TransactionLookupRequest.Details details = req.getLookUpData().getDetails();
+
         var resp = service.lookup(
-                req.getUserId(),
-                req.getRrn(),
-                req.getStan(),
-                req.getTxnAmt(),
-                req.getTermId(),
-                req.getSetlDate(),
-                req.getMessageType(),
-                req.getReverse()
+                header.getTargetSystemUserID(),
+                details.getRrn(),
+                details.getStan(),
+                details.getTxnAmt(),
+                details.getTermId(),
+                details.getSetlDate(),
+                details.getMessageType(),
+                details.getReverse()
         );
+
         return ResponseEntity.ok(resp);
     }
 }

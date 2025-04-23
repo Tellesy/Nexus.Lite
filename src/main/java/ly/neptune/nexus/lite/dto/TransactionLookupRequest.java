@@ -1,68 +1,173 @@
+//package ly.neptune.nexus.lite.dto;
+//
+//import com.fasterxml.jackson.annotation.JsonAlias;
+//import com.fasterxml.jackson.annotation.JsonProperty;
+//import jakarta.validation.constraints.NotBlank;
+//import jakarta.validation.constraints.Pattern;
+//import jakarta.validation.constraints.Size;
+//import lombok.Data;
+//
+//@Data
+//public class TransactionLookupRequest {
+//
+//    @JsonProperty("user_id")
+//    @JsonAlias({"USERID", "UserId","userId"})
+//    @NotBlank(message = "userId is required")
+//    private String userId;
+//
+//    @JsonProperty("rrn")
+//    @JsonAlias({"RRN", "Rrn"})
+//    @NotBlank(message = "rrn is required")
+//    @Size(min = 12, max = 12, message = "rrn must be exactly 12 digits")
+//    @Pattern(regexp = "\\d{12}", message = "rrn must contain only digits")
+//    private String rrn;
+//
+//    @JsonProperty("stan")
+//    @JsonAlias({"STAN", "Stan"})
+//    @NotBlank(message = "stan is required")
+//    @Size(min = 6, max = 6, message = "stan must be exactly 6 digits")
+//    @Pattern(regexp = "\\d{6}", message = "stan must contain only digits")
+//    private String stan;
+//
+//
+//    @JsonProperty("txn_amt")
+//    @JsonAlias({"TXNAMT", "TxnAmt","txnAmt"}) // Backwards compatibility with older versions of the API (as per Moamalat Request)
+//    @NotBlank(message = "txnAmt is required")
+//    // Updated Pattern: Allow only digits (e.g., "105000")
+//    @Pattern(regexp = "^\\d+$", message = "txnAmt must contain only digits representing subunits")
+//    private String txnAmt;
+//
+//
+//    @JsonProperty("term_id")
+//    @JsonAlias({"TERMID", "TermId","termId"}) // Backwards compatibility with older versions of the API (as per Moamalat Request)
+//    @NotBlank(message = "termId is required")
+//    @Size(min = 6, max = 8, message = "termId must be between 6 and 8 digits")
+//    @Pattern(regexp = "\\d{6,8}", message = "termId must contain only digits")
+//    private String termId;
+//
+//    @JsonProperty("setl_date")
+//    @JsonAlias({"SETLDATE", "SetlDate","setlDate"})
+//    @NotBlank(message = "setlDate is required")
+//    @Pattern(
+//            regexp = "^(?:0[1-9]|[12][0-9]|3[01])-(?:0[1-9]|1[0-2])-\\d{4}$",
+//            message = "setlDate must follow DD-MM-YYYY"
+//    )
+//    private String setlDate;
+//
+//    @JsonProperty("message_type")
+//    @JsonAlias({"MESSAGETYPE", "MsgType","messageType","MessageType"})
+//    @Size(min = 4, max = 4, message = "messageType must be exactly 4 digits if provided")
+//    @Pattern(regexp = "\\d{4}", message = "messageType must contain only 4 digits if provided")
+//    private String messageType = "1200";
+//
+//    @JsonProperty("reverse")
+//    @JsonAlias({"REVERSE", "Reverse"})
+//    private Boolean reverse = false;
+//
+//
+//}
+
+
 package ly.neptune.nexus.lite.dto;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+
+@Getter
+@Setter
 public class TransactionLookupRequest {
 
-    @JsonProperty("user_id")
-    @JsonAlias({"USERID", "UserId","userId"})
-    @NotBlank(message = "userId is required")
-    private String userId;
+    //Sorry the standard look stupid, it is not my fault :( .. YOU KNOW MY WORK I WOULD NEVER DO THIS
+    @JsonProperty("HeaderSwitchModel")
+    @JsonAlias({ "headerSwitchModel", "HeaderSwitchModel", "headerswitchmodel", "header_switch_model"})
+   // @NotNull(message = "HeaderSwitchModel cannot be null")
+    @Valid // Enable validation for nested object
+    private HeaderSwitchModel headerSwitchModel = new HeaderSwitchModel();
 
-    @JsonProperty("rrn")
-    @JsonAlias({"RRN", "Rrn"})
-    @NotBlank(message = "rrn is required")
-    @Size(min = 12, max = 12, message = "rrn must be exactly 12 digits")
-    @Pattern(regexp = "\\d{12}", message = "rrn must contain only digits")
-    private String rrn;
-
-    @JsonProperty("stan")
-    @JsonAlias({"STAN", "Stan"})
-    @NotBlank(message = "stan is required")
-    @Size(min = 6, max = 6, message = "stan must be exactly 6 digits")
-    @Pattern(regexp = "\\d{6}", message = "stan must contain only digits")
-    private String stan;
+    @JsonProperty("LookUpData")
+    @JsonAlias({"lookUpData", "LookupData", "lookupdata", "lookup_data"})
+    @NotNull(message = "LookUpData cannot be null")
+    @Valid // Enable validation for nested object
+    private LookUpData lookUpData;
 
 
-    @JsonProperty("txn_amt")
-    @JsonAlias({"TXNAMT", "TxnAmt","txnAmt"}) // Backwards compatibility with older versions of the API (as per Moamalat Request)
-    @NotBlank(message = "txnAmt is required")
-    // Updated Pattern: Allow only digits (e.g., "105000")
-    @Pattern(regexp = "^\\d+$", message = "txnAmt must contain only digits representing subunits")
-    private String txnAmt;
+
+    @Getter
+    @Setter
+    //@AllArgsConstructor
+    public static class HeaderSwitchModel {
+        @JsonProperty("TargetSystemUserID")
+        @JsonAlias({"USERID", "UserId", "userId", "targetSystemUserID"}) // Added variations
+       // @NotBlank(message = "TargetSystemUserID is required")
+        private String targetSystemUserID = "SWITCHUSER";
+    }
+
+    @Getter
+    @Setter
+    public static class LookUpData {
+        @JsonProperty("Details")
+        @NotNull(message = "Details cannot be null")
+        @Valid // Enable validation for nested object
+        private Details details;
+    }
+
+    @Getter
+    @Setter
+    public static class Details {
+        @JsonProperty("RRN")
+        @JsonAlias({"rrn", "Rrn"})
+        @NotBlank(message = "RRN is required")
+        @Size(min = 12, max = 12, message = "RRN must be exactly 12 digits")
+        @Pattern(regexp = "\\d{12}", message = "RRN must contain only digits")
+        private String rrn;
+
+        @JsonProperty("STAN")
+        @JsonAlias({"stan", "Stan"})
+        @NotBlank(message = "STAN is required")
+        @Size(min = 6, max = 6, message = "STAN must be exactly 6 digits")
+        @Pattern(regexp = "\\d{6}", message = "STAN must contain only digits")
+        private String stan;
+
+        @JsonProperty("TXNAMT")
+        @JsonAlias({"txn_amt", "TxnAmt", "txnAmt"})
+        @NotBlank(message = "TXNAMT is required")
+        @Pattern(regexp = "^\\d+$", message = "TXNAMT must contain only digits representing subunits")
+        private String txnAmt;
+
+        @JsonProperty("TERMID")
+        @JsonAlias({"term_id", "TermId", "termId"})
+        @NotBlank(message = "TERMID is required")
+        @Size(min = 6, max = 8, message = "TERMID must be between 6 and 8 digits")
+        @Pattern(regexp = "\\d{6,8}", message = "TERMID must contain only digits")
+        private String termId;
+
+        @JsonProperty("SETLDATE")
+        @JsonAlias({"setl_date", "SetlDate", "setlDate"})
+        @NotBlank(message = "SETLDATE is required")
+        @Pattern(
+                regexp = "^(?:0[1-9]|[12][0-9]|3[01])-(?:0[1-9]|1[0-2])-\\d{4}$",
+                message = "SETLDATE must follow DD-MM-YYYY"
+        )
+        private String setlDate;
 
 
-    @JsonProperty("term_id")
-    @JsonAlias({"TERMID", "TermId","termId"}) // Backwards compatibility with older versions of the API (as per Moamalat Request)
-    @NotBlank(message = "termId is required")
-    @Size(min = 6, max = 8, message = "termId must be between 6 and 8 digits")
-    @Pattern(regexp = "\\d{6,8}", message = "termId must contain only digits")
-    private String termId;
+        @JsonProperty("message_type")
+        @JsonAlias({"MESSAGETYPE", "MsgType","messageType","MessageType"})
+        @Size(min = 4, max = 4, message = "messageType must be exactly 4 digits if provided")
+        @Pattern(regexp = "\\d{4}", message = "messageType must contain only 4 digits if provided")
+        private String messageType = "1200";
 
-    @JsonProperty("setl_date")
-    @JsonAlias({"SETLDATE", "SetlDate","setlDate"})
-    @NotBlank(message = "setlDate is required")
-    @Pattern(
-            regexp = "^(?:0[1-9]|[12][0-9]|3[01])-(?:0[1-9]|1[0-2])-\\d{4}$",
-            message = "setlDate must follow DD-MM-YYYY"
-    )
-    private String setlDate;
+        @JsonProperty("reverse")
+        @JsonAlias({"REVERSE", "Reverse"})
+        private Boolean reverse = false;
 
-    @JsonProperty("message_type")
-    @JsonAlias({"MESSAGETYPE", "MsgType","messageType","MessageType"})
-    @Size(min = 4, max = 4, message = "messageType must be exactly 4 digits if provided")
-    @Pattern(regexp = "\\d{4}", message = "messageType must contain only 4 digits if provided")
-    private String messageType = "1200";
-
-    @JsonProperty("reverse")
-    @JsonAlias({"REVERSE", "Reverse"})
-    private Boolean reverse = false;
-
-
+    }
 }
