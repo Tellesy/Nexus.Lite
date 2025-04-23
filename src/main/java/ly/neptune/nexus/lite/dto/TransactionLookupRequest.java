@@ -1,6 +1,7 @@
 package ly.neptune.nexus.lite.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -27,20 +28,23 @@ public class TransactionLookupRequest {
     private String stan;
 
 
-    @JsonProperty("txnAmt")
+    @JsonProperty("txn_amt")
+    @JsonAlias({"TXNAMT", "TxnAmt","txnAmt"}) // Backwards compatibility with older versions of the API (as per Moamalat Request)
     @NotBlank(message = "txnAmt is required")
     // Updated Pattern: Allow only digits (e.g., "105000")
     @Pattern(regexp = "^\\d+$", message = "txnAmt must contain only digits representing subunits")
     private String txnAmt;
 
 
-    @JsonProperty("termId")
+    @JsonProperty("term_id")
+    @JsonAlias({"TERMID", "TermId","termId"}) // Backwards compatibility with older versions of the API (as per Moamalat Request)
     @NotBlank(message = "termId is required")
     @Size(min = 6, max = 8, message = "termId must be between 6 and 8 digits")
     @Pattern(regexp = "\\d{6,8}", message = "termId must contain only digits")
     private String termId;
 
-    @JsonProperty("setlDate")
+    @JsonProperty("setl_date")
+    @JsonAlias({"SETLDATE", "SetlDate","setlDate"})
     @NotBlank(message = "setlDate is required")
     @Pattern(
             regexp = "^(?:0[1-9]|[12][0-9]|3[01])-(?:0[1-9]|1[0-2])-\\d{4}$",
@@ -48,12 +52,14 @@ public class TransactionLookupRequest {
     )
     private String setlDate;
 
-    @JsonProperty("messageType")
+    @JsonProperty("message_type")
+    @JsonAlias({"MESSAGETYPE", "MsgType","messageType","MessageType"})
     @Size(min = 4, max = 4, message = "messageType must be exactly 4 digits if provided")
     @Pattern(regexp = "\\d{4}", message = "messageType must contain only 4 digits if provided")
     private String messageType = "1200";
 
     @JsonProperty("reverse")
+    @JsonAlias({"REVERSE", "Reverse"})
     private Boolean reverse = false;
 
 

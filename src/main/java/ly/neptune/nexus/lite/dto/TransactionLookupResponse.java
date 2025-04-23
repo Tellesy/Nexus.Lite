@@ -15,15 +15,24 @@ public class TransactionLookupResponse {
 
     @JsonProperty("message")
     private final String message;
+
+    @JsonProperty("Message")
+    private final String Message;
+
     @JsonProperty("transactionType")
     private final String transactionType;
+
+    @JsonProperty("TransactionType")
+    private final String TransactionType;
 
 
     private TransactionLookupResponse(String code, String message, String type) {
         this.code = code;
         this.Code = code; // Backwards compatibility with older versions of the API (as per Moamalat Request)
         this.message = message;
+        this.Message = message; // Backwards compatibility with older versions of the API (as per Moamalat Request)
         this.transactionType = type;
+        this.TransactionType = type;// Backwards compatibility with older versions of the API (as per Moamalat Request)
     }
 
     public static TransactionLookupResponse error(String code, String msg) {
