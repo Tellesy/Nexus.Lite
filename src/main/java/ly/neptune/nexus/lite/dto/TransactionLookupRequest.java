@@ -1,6 +1,5 @@
 package ly.neptune.nexus.lite.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
@@ -11,17 +10,20 @@ import lombok.Data;
 @Data
 public class TransactionLookupRequest {
 
-    @JsonProperty("userId")
+    @JsonProperty("user_id")
+    @JsonAlias({"USERID", "UserId","userId"})
     @NotBlank(message = "userId is required")
     private String userId;
 
     @JsonProperty("rrn")
+    @JsonAlias({"RRN", "Rrn"})
     @NotBlank(message = "rrn is required")
     @Size(min = 12, max = 12, message = "rrn must be exactly 12 digits")
     @Pattern(regexp = "\\d{12}", message = "rrn must contain only digits")
     private String rrn;
 
     @JsonProperty("stan")
+    @JsonAlias({"STAN", "Stan"})
     @NotBlank(message = "stan is required")
     @Size(min = 6, max = 6, message = "stan must be exactly 6 digits")
     @Pattern(regexp = "\\d{6}", message = "stan must contain only digits")
