@@ -1,5 +1,6 @@
 package ly.neptune.nexus.lite.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -25,13 +26,13 @@ public class TransactionLookupRequest {
     @Pattern(regexp = "\\d{6}", message = "stan must contain only digits")
     private String stan;
 
+
     @JsonProperty("txnAmt")
     @NotBlank(message = "txnAmt is required")
-    @Pattern(
-            regexp = "\\d{1,8}(\\.\\d{1,2})?",
-            message = "txnAmt must be a number up to 8 digits with optional 1–2 decimal places"
-    )
+    // Updated Pattern: Allow only digits (e.g., "105000")
+    @Pattern(regexp = "^\\d+$", message = "txnAmt must contain only digits representing subunits")
     private String txnAmt;
+
 
     @JsonProperty("termId")
     @NotBlank(message = "termId is required")
@@ -46,4 +47,14 @@ public class TransactionLookupRequest {
             message = "setlDate must follow DD-MM-YYYY"
     )
     private String setlDate;
+
+    @JsonProperty("messageType")
+    @Size(min = 4, max = 4, message = "messageType must be exactly 4 digits if provided")
+    @Pattern(regexp = "\\d{4}", message = "messageType must contain only 4 digits if provided")
+    private String messageType = "1200";
+
+    @JsonProperty("reverse")
+    private Boolean reverse = false;
+
+
 }

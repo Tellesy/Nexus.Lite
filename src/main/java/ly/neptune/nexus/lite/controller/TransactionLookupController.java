@@ -22,7 +22,9 @@ public class TransactionLookupController {
                 req.getStan(),
                 req.getTxnAmt(),
                 req.getTermId(),
-                req.getSetlDate()
+                req.getSetlDate(),
+                req.getMessageType(),
+                req.getReverse()
         );
         return ResponseEntity.ok(resp);
     }
