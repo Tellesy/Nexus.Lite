@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionLookupResponse {
-
+    /*
+     * This is the Free and Lite version of nexus, if you want to use the full version, Please contact us.
+     */
     @JsonProperty("code")
     private final String code;
 
@@ -41,5 +43,8 @@ public class TransactionLookupResponse {
     public static TransactionLookupResponse withType(String code, String msg, String type) {
         return new TransactionLookupResponse(code, msg, type);
     }
+    /*
+     * This is the Free and Lite version of nexus, if you want to use the full version, Please contact us.
+     */
 }
 

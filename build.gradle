@@ -10,7 +10,7 @@ plugins {
 
 
 group = 'ly.neptune'
-version = '1.1.1'
+version = '1.2.0'
 
 java {
     toolchain {
@@ -92,7 +92,15 @@ dependencies {
     // Oracle JDBC driver
     implementation 'com.oracle.database.jdbc:ojdbc8:23.6.0.24.10'
 
-
+    // SOAP Web Services
+    implementation("org.springframework.boot:spring-boot-starter-web-services")
+    implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
+    implementation("org.glassfish.jaxb:jaxb-runtime:4.0.5")
+    implementation("jakarta.jws:jakarta.jws-api:3.0.0")
+    implementation("jakarta.xml.ws:jakarta.xml.ws-api:4.0.2")
+    implementation("jakarta.xml.soap:jakarta.xml.soap-api:3.0.2")
+    implementation("com.sun.xml.messaging.saaj:saaj-impl:3.0.4")
+    compileOnly("jakarta.servlet:jakarta.servlet-api:6.1.0")
 
     // Lombok
     implementation("org.projectlombok:lombok:1.18.36")

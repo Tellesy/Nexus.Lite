@@ -38,3 +38,12 @@ app:
     log-table-name: swtbs_txn_log   # Optional: Defaults to swtbs_txn_log if omitted
     hist-table-name: swtbs_txn_hist # Optional: Set to query history table, leave blank/omit otherwise
     rtl-table-name: detbs_rtl_teller # Optional: Defaults to detbs_rtl_teller if omitted
+
+
+fcubs:
+  wsdl-url: "http://X.X.X.X:XXXX" # Replace with the actual WSDL URL of your bank
+  header:
+    user-id: "XXXXX" #Replace with actual user ID
+    branch: "XXX" #Replace with actual branch code
+    source: "XXXX" #Replace with the actual source
+    ubscomp: "FCUBS"

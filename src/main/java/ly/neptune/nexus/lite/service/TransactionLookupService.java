@@ -2,6 +2,8 @@ package ly.neptune.nexus.lite.service;
 
 import lombok.extern.slf4j.Slf4j;
 import ly.neptune.nexus.lite.dto.TransactionLookupResponse;
+import ly.neptune.nexus.lite.service.cbs.dto.CbsFundsTransferRequest;
+import ly.neptune.nexus.lite.service.cbs.flexcube.v14_3.TellerTransactionOperationsHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +22,7 @@ import java.util.regex.Pattern;
 public class TransactionLookupService {
 
     private final JdbcTemplate jdbc;
+    private final TellerTransactionOperationsHandler tellerTransactionOperationsHandler;
 
     // Inject configuration properties
     @Value("${app.datasource.schema-name:#{null}}")
@@ -45,8 +48,10 @@ public class TransactionLookupService {
     private static final DateTimeFormatter OUT_FMT = DateTimeFormatter.ofPattern("yyMMdd");
 
     @Autowired
-    public TransactionLookupService(@Qualifier("oracleJdbcTemplate") JdbcTemplate jdbcTemplate) {
+    public TransactionLookupService(@Qualifier("oracleJdbcTemplate") JdbcTemplate jdbcTemplate,
+                                    TellerTransactionOperationsHandler tellerTransactionOperationsHandler) {
         this.jdbc = jdbcTemplate;
+        this.tellerTransactionOperationsHandler = tellerTransactionOperationsHandler;
     }
 
     // Note: Parameters messageType and reverse are present but not used from controller in provided code.
@@ -143,7 +148,7 @@ public class TransactionLookupService {
                     log.info("Transaction found with status 'S', RTL status: {}. RRN: {}, STAN: {}, RefNo: {}", rtl, rrn, stan, refNo);
                     return switch (rtl) {
                         case "V" -> TransactionLookupResponse.withType("R2","Already Reversed", pc.equals("21")?"CREDIT":"DEBIT");
-                        case "A" -> TransactionLookupResponse.withType("R3","Already Processed", pc.equals("21")?"CREDIT":"DEBIT");
+                        case "A" -> isReverseRequired(reverse,refNo,pc);
                         default  -> {
                             log.error("Unexpected RTL status '{}' for RRN: {}, STAN: {}, RefNo: {}", rtl, rrn, stan, refNo);
                             yield TransactionLookupResponse.error("E9","Core bank system error - Unknown RTL status");
@@ -166,6 +171,29 @@ public class TransactionLookupService {
         log.info("Transaction not found for RRN: {}, STAN: {}", rrn, stan);
         return TransactionLookupResponse.error("R4","Transaction is not Found");
     }
+
+    private TransactionLookupResponse isReverseRequired(boolean reverse,String transactionReference,String pc) {
+        if(reverse)
+        {
+            CbsFundsTransferRequest transferRequest = new CbsFundsTransferRequest();
+            transferRequest.setFccRef(transactionReference);
+            var response = tellerTransactionOperationsHandler.reverseTransaction(transferRequest);
+            if(response.isSuccess()) {
+                System.out.println("Transaction reversed successfully");
+                return TransactionLookupResponse.withType("R5", "Transaction Reversed Successfully", pc.equals("21") ? "CREDIT" : "DEBIT");
+            }else
+            {
+                System.err.println("Transaction could not be reversed");
+                System.err.println(response.getErrorMsg());
+                System.err.println(response.getErrorCode());
+
+            }
+
+        }
+
+        return TransactionLookupResponse.withType("R3","Already Processed", pc.equals("21")?"CREDIT":"DEBIT");
+    }
+
 
     // --- Helper methods (remain the same) ---
     private boolean isDigits(String s,int len) {
