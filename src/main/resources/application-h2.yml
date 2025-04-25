@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/systemdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  flyway:
+    enabled: false # Disable Flyway to avoid auto-migrations
+  jpa:
+    hibernate:
+      ddl-auto: update # Use Hibernate to create tables instead of Flyway
+
+nexus:
+  security:
+    default-admin-username: admin
+    default-admin-password: admin

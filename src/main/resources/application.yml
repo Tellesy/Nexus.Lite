@@ -1,28 +1,10 @@
 spring:
   application:
     name: nexus-lite
-  datasource:
-    hikari:
-
-      jdbc-url:               <DB CONNECTION STRING>
-      username:               <DB USERNAME>
-      password:               <DB PASSWORD>
-      driver-class-name:      oracle.jdbc.OracleDriver
-      maximum-pool-size:      20
-      minimum-idle:           2
-      connection-timeout:     19000
-      idle-timeout:           450000
-      max-lifetime:           800000
-      data-source-properties:
-        defaultRowPrefetch:        100
-        implicitCachingEnabled:    true
-        fastConnectionFailoverEnabled: true
-        implicitStatementCacheSize:   50
-
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.OracleDialect
+  profiles:
+    active: h2
+  # Database configuration moved to application-h2.yml and application-mysql.yml
+  # Use profiles to switch between configurations
 
 server:
   port: 7003

@@ -85,15 +85,23 @@ if (packagingType == 'war') {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-web-services")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("com.vaadin:vaadin-spring-boot-starter:24.3.0")
+    implementation("org.yaml:snakeyaml:2.0")
 
+    // Database support
+    implementation 'com.h2database:h2'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
 
     // Oracle JDBC driver
     implementation 'com.oracle.database.jdbc:ojdbc8:23.6.0.24.10'
 
     // SOAP Web Services
-    implementation("org.springframework.boot:spring-boot-starter-web-services")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.2")
     implementation("org.glassfish.jaxb:jaxb-runtime:4.0.5")
     implementation("jakarta.jws:jakarta.jws-api:3.0.0")
@@ -110,5 +118,3 @@ dependencies {
 
 
 }
-
-

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" width="200" height="60">
+  <rect x="10" y="10" width="40" height="40" rx="4" fill="#1976d2" />
+  <text x="60" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1976d2">Nexus Lite</text>
+  <path d="M20 30 L40 20 L40 40 Z" fill="white" />
+  <circle cx="30" cy="30" r="5" fill="#ffeb3b" />
+</svg>

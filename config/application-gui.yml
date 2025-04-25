@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    hikari: {connection-timeout: 19000, jdbc-url: 'jdbc:oracle:thin:@10.10.154.13:1521/devfcdb_pdb1.uatdev.uatdev.oraclevcn.com',
+      password: NEXUS_MW, max-lifetime: 800000, minimum-idle: 2, maximum-pool-size: 20,
+      idle-timeout: 450000, driver-class-name: oracle.jdbc.OracleDriver, username: NEXUS_MW}
+fcubs:
+  wsdl-url: http://10.10.154.10:7003
+  header: {ubscomp: FCUBS, user-id: NEXUS_MW, source: NEXUS, branch: '100'}
